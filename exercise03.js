@@ -40,7 +40,7 @@ function Font(name, chars, lineHeight) {
 }
 
 Font.prototype.render = function(text) {
-    var result = [];
+    var result = new Array();
     text.split('').forEach(element => {
 		for (var i in this.map) {
             if (i == element) {
@@ -49,7 +49,7 @@ Font.prototype.render = function(text) {
 					result.push(this.map[i].string);
 				else {
 					// The result is 2d array, each element of this array is an array of lines, which represents of one provided letter
-					var tmp = [];
+					var tmp = new Array();
 					for (var j=0; j<this.lineHeight; j++) {
 						tmp.push(this.map[i].getLine(j));
 					}
@@ -69,7 +69,7 @@ Font.prototype.write = function(text) {
 	else {
 		// For MultiLineChars Font create temporal array of 4 empty strings
 		// 1. string will contain 1. lines of every letter and so on
-		var tmp = [];
+		var tmp = new Array();
 		for (var i = 0; i<this.lineHeight; i++) {
 			tmp.push('');
 		}
@@ -92,7 +92,7 @@ var parseMorseAlphabet = function() {
 		"m=--;n=-.;o=---;p=.---.;q=--.-;r=.-.;s=...;t=-;u=..-;v=...-;w=.--;x=-..-;"+
         "y=-.-;z=--..; =//;.=.-.-.-;,=--..--;?=..--..;!=-.-.--";
     var alphabetArray = alphabetString.split(/[=;]/);
-    var result = [];
+    var result = new Array();
     for (var i = 0; i < alphabetArray.length; i+=2) {
         result.push(new SingleLineChar(alphabetArray[i], alphabetArray[i+1]));
     }
@@ -101,7 +101,7 @@ var parseMorseAlphabet = function() {
 
 var morseFont = new Font("morseFont", parseMorseAlphabet());
 morseFont.render = function(text) {
-    var result = [];
+    var result = new Array();
     text.split('').forEach(element => {
         for (var i in this.map) {
             if (i == element)
