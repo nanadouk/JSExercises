@@ -100,15 +100,11 @@ var parseMorseAlphabet = function() {
 }
 
 var morseFont = new Font("morseFont", parseMorseAlphabet());
+Font.prototype._render = Font.prototype.render;
+// Overwrite method 'render' to add '//' between characters 
 morseFont.render = function(text) {
-    var result = new Array();
-    text.split('').forEach(element => {
-        for (var i in this.map) {
-            if (i == element)
-                result.push(this.map[i].string);
-        }
-    });
-    
+	// Call original render
+	var result = this._render(text);
     for (var i = 0; i < result.length-1; i++) {
         if (result[i+1] != '//' && result[i] != '//')
             result[i] = result[i] + '/';
