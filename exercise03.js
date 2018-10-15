@@ -48,14 +48,13 @@ Font.prototype.render = function(text) {
 			result.push(this.map[element].string);
 		else if (this.map[element] instanceof MultiLineChar){
 			// The result is 2d array, each element of this array is an array of lines, which represents of one provided letter
-			var tmp = [];
 			for (var i=0; i<this.lineHeight; i++) {
-				tmp.push(this.map[element].getLine(i));
+				if (result[i] == undefined) result[i] = '';
+				result[i] += this.map[element].getLine(i);
 			}
-			result.push(tmp);
 		}
 	});
-    return result;
+	return result;
 }
 
 Font.prototype.write = function(text) {
@@ -64,21 +63,8 @@ Font.prototype.write = function(text) {
 		// For SingleLineChars Font just convert an array to string
 		console.log(arr.join('').toString());
 	else {
-		// For MultiLineChars Font create temporal array of 4 empty strings
-		// 1. string will contain 1. lines of every letter and so on
-		var tmp = [];
-		for (var i = 0; i<this.lineHeight; i++) {
-			tmp.push('');
-		}
-		for (var i = 0; i<this.lineHeight; i++) {
-			for (var j = 0; j<arr.length; j++){
-				// Add to the i-th string i-th line of every character
-				tmp[i] += arr[j][i];
-			}
-		}
-		// Print out every line of temporal array
-		tmp.forEach(element => {
-			console.log(element);
+		arr.forEach(function(item, index){
+			console.log(item);
 		});
 	}
 }
