@@ -27,37 +27,34 @@ MultiLineChar.prototype = Object.create(Char.prototype);
 MultiLineChar.prototype.constructor = MultiLineChar;
 
 MultiLineChar.prototype.getLine = function(index) {
-    return this.lines[index];
+	if (index < this.lines.length && index >= 0)
+		return this.lines[index];
 }
 
 function Font(name, chars, lineHeight) {
     this.name = name;                           
     this.map = Object.create(null);                      
     chars.forEach(function(item, index) {                  
-        this.map[item.value] = item;                 
+        this.map[item.getValue()] = item;                 
     }, this);
     this.lineHeight = lineHeight || 1;                                    
 }
 
 Font.prototype.render = function(text) {
-    var result = new Array();
+    var result = [];
     text.split('').forEach(element => {
-		for (var i in this.map) {
-            if (i == element) {
-				// Check if a Font contains of SingleLineChars of MultiLineChars
-				if (this.lineHeight == 1)
-					result.push(this.map[i].string);
-				else {
-					// The result is 2d array, each element of this array is an array of lines, which represents of one provided letter
-					var tmp = new Array();
-					for (var j=0; j<this.lineHeight; j++) {
-						tmp.push(this.map[i].getLine(j));
-					}
-					result.push(tmp);
-				}
+		// Check if a Font contains of SingleLineChars or MultiLineChars
+		if (this.map[element] instanceof SingleLineChar)
+			result.push(this.map[element].string);
+		else if (this.map[element] instanceof MultiLineChar){
+			// The result is 2d array, each element of this array is an array of lines, which represents of one provided letter
+			var tmp = [];
+			for (var i=0; i<this.lineHeight; i++) {
+				tmp.push(this.map[element].getLine(i));
 			}
-        }
-    });
+			result.push(tmp);
+		}
+	});
     return result;
 }
 
@@ -69,7 +66,7 @@ Font.prototype.write = function(text) {
 	else {
 		// For MultiLineChars Font create temporal array of 4 empty strings
 		// 1. string will contain 1. lines of every letter and so on
-		var tmp = new Array();
+		var tmp = [];
 		for (var i = 0; i<this.lineHeight; i++) {
 			tmp.push('');
 		}
@@ -92,7 +89,7 @@ var parseMorseAlphabet = function() {
 		"m=--;n=-.;o=---;p=.---.;q=--.-;r=.-.;s=...;t=-;u=..-;v=...-;w=.--;x=-..-;"+
         "y=-.-;z=--..; =//;.=.-.-.-;,=--..--;?=..--..;!=-.-.--";
     var alphabetArray = alphabetString.split(/[=;]/);
-    var result = new Array();
+    var result = [];
     for (var i = 0; i < alphabetArray.length; i+=2) {
         result.push(new SingleLineChar(alphabetArray[i], alphabetArray[i+1]));
     }
